@@ -15,6 +15,7 @@ import {
 } from "react-aria-components";
 import {
   hid_usage_from_page_and_id,
+  hid_usage_get_label,
   hid_usage_page_get_ids,
 } from "../hid-usages";
 import { useCallback, useMemo } from "react";
@@ -55,14 +56,20 @@ const UsageSection = ({ id, min, max }: UsageSectionProps) => {
     <Section id={id}>
       <Header className="text-base-content/50">{info?.Name}</Header>
       <Collection items={usages}>
-        {(i) => (
-          <ListBoxItem
-            className="rac-hover:bg-base-300 pl-3 relative rac-focus:bg-base-300 cursor-default select-none rac-selected:before:content-['✔'] before:absolute before:left-[0] before:top-[0]"
-            id={hid_usage_from_page_and_id(id, i.Id)}
-          >
-            {i.Name}
-          </ListBoxItem>
-        )}
+        {(i) => {
+          const label = hid_usage_get_label(id, i.Id);
+          const text =
+            label && label !== i.Name ? `${label} — ${i.Name}` : i.Name;
+          return (
+            <ListBoxItem
+              className="rac-hover:bg-base-300 pl-3 relative rac-focus:bg-base-300 cursor-default select-none rac-selected:before:content-['✔'] before:absolute before:left-[0] before:top-[0]"
+              id={hid_usage_from_page_and_id(id, i.Id)}
+              textValue={text}
+            >
+              {text}
+            </ListBoxItem>
+          );
+        }}
       </Collection>
     </Section>
   );
